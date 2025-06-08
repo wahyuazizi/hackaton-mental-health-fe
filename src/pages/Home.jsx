@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { MessageCircle, Shield, Heart, Brain, ArrowRight, Moon, Sparkles, UserSearch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,12 +44,12 @@ const Home = () => {
       <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-semibold text-white">AIRA</span>
-            </div>
+            </Link>
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
               <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
@@ -90,13 +91,17 @@ const Home = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg">
-                Mulai Chat dengan AI Counselor
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg">
-                Ambil Assessment
-              </Button>
+              <Link to="/chat">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg">
+                  Mulai Chat dengan AI Counselor
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/assessment">
+                <Button size="lg" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg">
+                  Ambil Assessment
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -147,10 +152,12 @@ const Home = () => {
               Langkah pertama adalah yang tersulit. Kami di sini untuk mendampingi Anda 
               setiap saat, tanpa judgment, dengan dukungan yang Anda butuhkan.
             </p>
-            <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-8 py-6 text-lg">
-              Mulai Sekarang - Gratis
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+            <Link to="/assessment">
+              <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-8 py-6 text-lg">
+                Mulai Sekarang - Gratis
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -159,12 +166,12 @@ const Home = () => {
       <footer className="border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+            <Link to="/" className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-semibold text-white">AIRA</span>
-            </div>
+            </Link>
             <div className="text-slate-400 text-sm">
               © 2025 AIRA. Dibuat dengan ❤️ untuk kesehatan mental yang lebih baik.
             </div>

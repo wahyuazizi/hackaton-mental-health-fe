@@ -200,7 +200,7 @@ const GamblingAssessment = () => {
                     Risiko {riskAssessment.level}
                   </span>
                 </div>
-                <p className={`mt-3 text-${riskAssessment.color}-300`}>
+                <p className={`mt-3 text-${riskAssessment.color}-400`}>
                   {riskAssessment.description}
                 </p>
               </div>
