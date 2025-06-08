@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, MessageCircle, User, Bot, Loader2, Heart, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Send, MessageCircle, User, Bot, Loader2, Heart, Shield, AlertTriangle } from 'lucide-react';
 
-const ChatCounselor = () => {
+const ChatCounselor = ({ userRiskLevel = null }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      type: 'bot',
+      type: 'assistant',
       content: 'Halo! Saya AIRA, AI Counselor Anda. Saya di sini untuk mendengarkan dan membantu Anda dengan pendekatan Cognitive Behavioral Therapy (CBT). Apa yang ingin Anda bicarakan hari ini?',
       timestamp: new Date().toLocaleTimeString()
     }
@@ -16,7 +13,16 @@ const ChatCounselor = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showCrisisAlert, setShowCrisisAlert] = useState(false);
+  const [crisisResources, setCrisisResources] = useState([
+    'Hotline Kesehatan Mental: 119',
+    'HIMPSI (Himpunan Psikologi Indonesia): 0804-1-500-454',
+    'Into The Light: 021-78842580'
+  ]);
+  const [conversationHistory, setConversationHistory] = useState([]);
   const messagesEndRef = useRef(null);
+
+  // Backend API URL - sesuaikan dengan URL backend Anda
+  const API_BASE_URL = 'http://localhost:8000';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,44 +32,30 @@ const ChatCounselor = () => {
     scrollToBottom();
   }, [messages]);
 
-  const crisisKeywords = ['bunuh diri', 'mengakhiri hidup', 'tidak ingin hidup', 'suicide', 'mati saja'];
+  const sendMessageToBackend = async (message, userRiskLevel = null) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: message,
+          conversation_history: conversationHistory,
+          user_risk_level: userRiskLevel
+        })
+      });
 
-  const detectCrisis = (message) => {
-    return crisisKeywords.some(keyword => message.toLowerCase().includes(keyword));
-  };
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-  const getBotResponse = async (userMessage) => {
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-
-    const message = userMessage.toLowerCase();
-    if (detectCrisis(message)) {
-      setShowCrisisAlert(true);
-      return "Saya sangat peduli dengan keselamatan Anda. Jika Anda memiliki pikiran untuk menyakiti diri sendiri, tolong segera hubungi nomor darurat 119 atau konsultasi dengan profesional kesehatan mental. Anda tidak sendirian dalam menghadapi ini. Bisakah kita bicara tentang dukungan yang bisa membantu Anda saat ini?";
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error calling backend:', error);
+      throw error;
     }
-
-    if (message.includes('cemas') || message.includes('khawatir') || message.includes('takut')) {
-      return "Saya memahami Anda sedang merasa cemas. Mari kita identifikasi pikiran yang mungkin memicu kecemasan ini. Bisakah Anda ceritakan situasi spesifik yang membuat Anda merasa cemas?";
-    }
-    if (message.includes('judi') || message.includes('betting') || message.includes('taruhan')) {
-      return "Terima kasih sudah mempercayai saya untuk membicarakan hal ini. Kecanduan judi adalah tantangan yang nyata. Mari kita eksplorasi: kapan terakhir kali Anda merasa keinginan untuk berjudi?";
-    }
-    if (message.includes('sedih') || message.includes('depresi') || message.includes('putus asa')) {
-      return "Saya dapat merasakan bahwa Anda sedang berjuang dengan perasaan sedih. Mari kita mulai dengan mengidentifikasi pikiran apa yang muncul ketika Anda merasa sedih?";
-    }
-    if (message.includes('stres') || message.includes('tertekan') || message.includes('overwhelmed')) {
-      return "Stres yang Anda rasakan valid dan dapat dikelola. Mari kita gunakan teknik grounding untuk menenangkan pikiran.";
-    }
-    if (message.includes('susah tidur') || message.includes('insomnia') || message.includes('tidak bisa tidur')) {
-      return "Masalah tidur sering terkait dengan pikiran yang berputar-putar. Mari kita coba teknik 'thought stopping'.";
-    }
-
-    const responses = [
-      "Terima kasih sudah berbagi dengan saya. Saya di sini untuk mendengarkan.",
-      "Saya memahami bahwa ini tidak mudah. Mari kita coba identifikasi pola pikir Anda.",
-      "Langkah untuk berbicara tentang masalah Anda adalah langkah yang berani.",
-      "Saya ingin membantu Anda memahami hubungan antara pikiran dan perasaan Anda."
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   const handleSendMessage = async () => {
@@ -75,19 +67,54 @@ const ChatCounselor = () => {
       content: inputMessage,
       timestamp: new Date().toLocaleTimeString()
     };
+
+    // Update messages and conversation history
     setMessages(prev => [...prev, userMessage]);
+    const newConversationHistory = [...conversationHistory, {
+      role: 'user',
+      content: inputMessage
+    }];
+    setConversationHistory(newConversationHistory);
+
+    const currentMessage = inputMessage;
     setInputMessage('');
     setIsLoading(true);
 
     try {
-      const botResponse = await getBotResponse(inputMessage);
+      const response = await sendMessageToBackend(currentMessage, userRiskLevel);
+      
+      // Handle crisis detection
+      if (response.is_crisis) {
+        setShowCrisisAlert(true);
+        setCrisisResources(response.crisis_resources || []);
+      }
+
       const botMessage = {
         id: messages.length + 2,
-        type: 'bot',
-        content: botResponse,
+        type: 'assistant',
+        content: response.response,
         timestamp: new Date().toLocaleTimeString()
       };
+
       setMessages(prev => [...prev, botMessage]);
+      
+      // Update conversation history
+      setConversationHistory(prev => [...prev, {
+        role: 'assistant',
+        content: response.response
+      }]);
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      // Fallback response
+      const errorMessage = {
+        id: messages.length + 2,
+        type: 'assistant',
+        content: 'Maaf, saya mengalami gangguan teknis. Silakan coba lagi dalam beberapa saat. Jika Anda dalam keadaan darurat, hubungi 119 atau layanan kesehatan mental terdekat.',
+        timestamp: new Date().toLocaleTimeString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -100,10 +127,39 @@ const ChatCounselor = () => {
     }
   };
 
+  const CrisisAlert = () => (
+    <div className="bg-red-600 text-white p-4 shadow-lg border-b border-red-500">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-start justify-between space-x-4">
+          <div className="flex items-center space-x-3">
+            <AlertTriangle className="w-6 h-6 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-lg">Bantuan Darurat Tersedia</p>
+              <p className="text-sm mb-2">Jika Anda dalam krisis, segera hubungi layanan darurat:</p>
+              <div className="space-y-1 text-sm">
+                {crisisResources.map((resource, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <span>•</span>
+                    <span>{resource}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button 
+            onClick={() => setShowCrisisAlert(false)} 
+            className="text-white hover:text-gray-200 text-xl font-bold"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <style jsx>{`
-        /* Custom Scrollbar Styles */
+      <style>{`
         .scrollbar-thin::-webkit-scrollbar {
           width: 8px;
         }
@@ -124,31 +180,11 @@ const ChatCounselor = () => {
           background: rgba(51, 65, 85, 0.7);
         }
         
-        .scrollbar-thumb-slate-700\\/50::-webkit-scrollbar-thumb:active {
-          background: rgba(71, 85, 105, 0.8);
-        }
-        
-        /* Firefox scrollbar */
         .scrollbar-thin {
           scrollbar-width: thin;
           scrollbar-color: rgba(51, 65, 85, 0.5) rgba(15, 23, 42, 0.2);
         }
         
-        /* Hide scrollbar for clean look until hover */
-        .scrollbar-auto-hide::-webkit-scrollbar-thumb {
-          background: transparent;
-          transition: background 0.3s ease;
-        }
-        
-        .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb {
-          background: rgba(51, 65, 85, 0.5);
-        }
-        
-        .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb:hover {
-          background: rgba(51, 65, 85, 0.7);
-        }
-        
-        /* Textarea specific scrollbar styling */
         textarea.scrollbar-thin::-webkit-scrollbar {
           width: 6px;
         }
@@ -169,35 +205,16 @@ const ChatCounselor = () => {
         textarea.scrollbar-thin:hover::-webkit-scrollbar-thumb {
           background: rgba(71, 85, 105, 0.6);
         }
-        
-        textarea.scrollbar-thin::-webkit-scrollbar-thumb:active {
-          background: rgba(85, 99, 125, 0.8);
-        }
       `}</style>
 
-      {showCrisisAlert && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white p-4">
-          <div className="max-w-none mx-auto flex items-center justify-center space-x-3">
-            <Shield className="w-6 h-6" />
-            <div className="flex-1 text-center">
-              <p className="font-semibold">Bantuan Darurat Tersedia</p>
-              <p className="text-sm">Jika Anda dalam krisis, hubungi 119 atau layanan kesehatan mental terdekat</p>
-            </div>
-            <button onClick={() => setShowCrisisAlert(false)} className="text-white hover:text-gray-200">✕</button>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
-      <nav className={`border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0 ${showCrisisAlert ? 'mt-20' : ''}`}>
+      <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0">
         <div className="w-full px-6">
           <div className="flex justify-between items-center h-16">
-            <Link to="/">
-                <button className="flex items-center space-x-2 text-slate-300 hover:text-white">
-                <ArrowLeft className="w-5 h-5" />
-                <span>Kembali</span>
-                </button>
-            </Link>
+            <button className="flex items-center space-x-2 text-slate-300 hover:text-white">
+              <ArrowLeft className="w-5 h-5" />
+              <span>Kembali</span>
+            </button>
             
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -212,25 +229,40 @@ const ChatCounselor = () => {
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
               <span className="text-slate-300 text-sm">Online</span>
+              {/* Demo button to show crisis alert */}
+              <button 
+                onClick={() => setShowCrisisAlert(true)} 
+                className="ml-4 text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-white"
+              >
+                Demo Crisis
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Chat Area - Full Screen Width & Height */}
+      {/* Crisis Alert - positioned right below header */}
+      {showCrisisAlert && <CrisisAlert />}
+
+      {/* Chat Area */}
       <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-track-slate-900/20 scrollbar-thumb-slate-700/50 hover:scrollbar-thumb-slate-600/70 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-auto-hide">
+        <div className="h-full overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-track-slate-900/20 scrollbar-thumb-slate-700/50 hover:scrollbar-thumb-slate-600/70">
           <div className="max-w-4xl mx-auto space-y-6">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[70%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`rounded-2xl p-6 ${message.type === 'user' ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' : 'bg-slate-800/50 text-slate-100 border border-slate-700/50'}`}>
+                  <div className={`rounded-2xl p-6 ${
+                    message.type === 'user' 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' 
+                      : 'bg-slate-800/50 text-slate-100 border border-slate-700/50'
+                  }`}>
                     <p className="leading-relaxed whitespace-pre-wrap text-base">{message.content}</p>
                     <p className="text-xs mt-3 opacity-70">{message.timestamp}</p>
                   </div>
                 </div>
               </div>
             ))}
+            
             {isLoading && (
               <div className="flex justify-start">
                 <div className="max-w-[70%]">
@@ -248,7 +280,7 @@ const ChatCounselor = () => {
         </div>
       </div>
 
-      {/* Input Area - Fixed at Bottom, Full Width */}
+      {/* Input Area */}
       <div className="flex-shrink-0 border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
@@ -259,7 +291,7 @@ const ChatCounselor = () => {
                 onKeyDown={handleKeyPress}
                 rows={1}
                 placeholder="Ketik pesan Anda..."
-                className="w-full resize-none rounded-2xl bg-slate-800/80 text-white p-4 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base min-h-[56px] max-h-32 scrollbar-thin scrollbar-track-slate-900/20 scrollbar-thumb-slate-700/50 hover:scrollbar-thumb-slate-600/70 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-auto-hide"
+                className="w-full resize-none rounded-2xl bg-slate-800/80 text-white p-4 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base min-h-[56px] max-h-32 scrollbar-thin"
                 style={{ 
                   height: 'auto',
                   minHeight: '56px'
@@ -270,13 +302,13 @@ const ChatCounselor = () => {
                 }}
               />
             </div>
-            <Button 
+            <button 
               onClick={handleSendMessage} 
               disabled={isLoading || !inputMessage.trim()} 
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 p-4 rounded-2xl h-12 w-12 flex-shrink-0"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 p-4 rounded-2xl h-12 w-12 flex-shrink-0 flex items-center justify-center transition-colors"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-            </Button>
+            </button>
           </div>
         </div>
       </div>
