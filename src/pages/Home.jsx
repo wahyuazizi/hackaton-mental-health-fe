@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Shield, Heart, Brain, ArrowRight, Moon, Sparkles } from 'lucide-react';
+import { MessageCircle, Shield, Heart, Brain, ArrowRight, Moon, Sparkles, UserSearch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -28,6 +28,12 @@ const Home = () => {
       title: "Personalized Care",
       description: "Strategi coping yang dipersonalisasi berdasarkan kondisi dan kebutuhan Anda",
       color: "text-pink-400"
+    },
+    {
+      icon: UserSearch,
+      title: "Temukan Professional (Soon)",
+      description: "Akses daftar psikiater dan psikolog terpercaya untuk mendukung perjalanan pemulihan Anda secara lebih personal.",
+      color: "text-pink-400"
     }
   ];
 
@@ -41,13 +47,13 @@ const Home = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-semibold text-white">MindCare</span>
+              <span className="text-xl font-semibold text-white">AIRA</span>
             </div>
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
               <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
               <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
-                Sign In
+                Sign In (Soon)
               </Button>
             </div>
           </div>
@@ -104,15 +110,15 @@ const Home = () => {
               Fitur yang Membantu Anda
             </h2>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-              Kombinasi teknologi AI terdepan dengan pendekatan terapi yang terbukti efektif
+              Kombinasi teknologi AI terdepan dengan pendekatan terapi yang efektif
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <Card key={index} className="bg-slate-900/50 border-slate-800/50 backdrop-blur-sm hover:bg-slate-900/70 transition-all duration-300 group">
-                <CardHeader className="pb-4">
-                  <div className={`w-12 h-12 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 group-hover:bg-slate-800/70 transition-colors`}>
+                <CardHeader className="pb-2">
+                  <div className={`w-12 h-12 rounded-lg bg-slate-800/50 flex items-center justify-center mb-2 group-hover:bg-slate-800/70 transition-colors`}>
                     <feature.icon className={`w-6 h-6 ${feature.color}`} />
                   </div>
                   <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
@@ -157,10 +163,10 @@ const Home = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-semibold text-white">MindCare</span>
+              <span className="text-xl font-semibold text-white">AIRA</span>
             </div>
             <div className="text-slate-400 text-sm">
-              © 2025 MindCare. Dibuat dengan ❤️ untuk kesehatan mental yang lebih baik.
+              © 2025 AIRA. Dibuat dengan ❤️ untuk kesehatan mental yang lebih baik.
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-800/50">
