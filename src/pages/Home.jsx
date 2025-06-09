@@ -53,7 +53,7 @@ const Home = () => {
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
               <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
-              <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
+              <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
                 Sign In (Soon)
               </Button>
             </div>
@@ -92,13 +92,13 @@ const Home = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/chat">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg cursor-pointer">
                   Mulai Chat dengan AI Counselor
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link to="/assessment">
-                <Button size="lg" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg">
+                <Button size="lg" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg cursor-pointer">
                   Ambil Assessment
                 </Button>
               </Link>
@@ -153,7 +153,7 @@ const Home = () => {
               setiap saat, tanpa judgment, dengan dukungan yang Anda butuhkan.
             </p>
             <Link to="/assessment">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-8 py-6 text-lg">
+              <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-8 py-6 text-lg cursor-pointer">
                 Mulai Sekarang - Gratis
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>

@@ -22,11 +22,11 @@ const GamblingAssessment = () => {
       setLoading(true);
       setError(null);
       const response = await fetch(`${API_BASE_URL}/api/assessment/questions`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       setAssessmentQuestions(data.questions || []);
     } catch (err) {
@@ -77,7 +77,7 @@ const GamblingAssessment = () => {
     const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
     const maxScore = assessmentQuestions.reduce((sum, category) => sum + category.questions.length * 3, 0);
     const percentage = (totalScore / maxScore) * 100;
-    
+
     if (percentage <= 25) return { level: 'Rendah', color: 'emerald', description: 'Risiko rendah kecanduan judi' };
     if (percentage <= 50) return { level: 'Sedang', color: 'yellow', description: 'Risiko sedang - perlu perhatian' };
     if (percentage <= 75) return { level: 'Tinggi', color: 'orange', description: 'Risiko tinggi - perlu bantuan profesional' };
@@ -91,6 +91,10 @@ const GamblingAssessment = () => {
   const nextStep = () => {
     if (currentStep < assessmentQuestions.length - 1) {
       setCurrentStep(currentStep + 1);
+      // Scroll ke atas setelah state update
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     } else {
       submitAssessment();
     }
@@ -99,7 +103,12 @@ const GamblingAssessment = () => {
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+      // Scroll ke atas setelah state update
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     }
+
   };
 
   const resetAssessment = () => {
@@ -113,6 +122,8 @@ const GamblingAssessment = () => {
   const retryFetch = () => {
     fetchAssessmentQuestions();
   };
+
+
 
   // Loading state
   if (loading) {
@@ -137,7 +148,7 @@ const GamblingAssessment = () => {
             <AlertTriangle className="w-16 h-16 text-red-400 mx-auto" />
             <h2 className="text-xl font-semibold text-white">Gagal Memuat Assessment</h2>
             <p className="text-slate-400">{error}</p>
-            <Button 
+            <Button
               onClick={retryFetch}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
             >
@@ -252,14 +263,14 @@ const GamblingAssessment = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                <Button 
+                <Button
                   className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                   onClick={() => window.location.href = '/chat'}
                 >
                   Chat dengan AI Counselor
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800"
                   onClick={resetAssessment}
                 >
@@ -284,7 +295,7 @@ const GamblingAssessment = () => {
             <span className="text-slate-400">{currentStep + 1} / {assessmentQuestions.length}</span>
           </div>
           <div className="w-full bg-slate-800 rounded-full h-2">
-            <div 
+            <div
               className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${assessmentQuestions.length ? ((currentStep + 1) / assessmentQuestions.length) * 100 : 0}%` }}
             />
@@ -318,11 +329,10 @@ const GamblingAssessment = () => {
                   {question.options.map((option) => (
                     <label
                       key={option.value}
-                      className={`flex items-center p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
-                        answers[question.id] === option.value
-                          ? 'border-blue-500 bg-blue-500/10 text-blue-300'
-                          : 'border-slate-700 bg-slate-800/30 text-slate-300 hover:border-slate-600 hover:bg-slate-800/50'
-                      }`}
+                      className={`flex items-center p-4 rounded-lg border cursor-pointer transition-all duration-200 ${answers[question.id] === option.value
+                        ? 'border-blue-500 bg-blue-500/10 text-blue-300'
+                        : 'border-slate-700 bg-slate-800/30 text-slate-300 hover:border-slate-600 hover:bg-slate-800/50'
+                        }`}
                     >
                       <input
                         type="radio"
@@ -332,11 +342,10 @@ const GamblingAssessment = () => {
                         onChange={(e) => handleAnswer(question.id, parseInt(e.target.value))}
                         className="sr-only"
                       />
-                      <div className={`w-4 h-4 rounded-full border-2 mr-3 ${
-                        answers[question.id] === option.value
-                          ? 'border-blue-500 bg-blue-500'
-                          : 'border-slate-500'
-                      }`}>
+                      <div className={`w-4 h-4 rounded-full border-2 mr-3 ${answers[question.id] === option.value
+                        ? 'border-blue-500 bg-blue-500'
+                        : 'border-slate-500'
+                        }`}>
                         {answers[question.id] === option.value && (
                           <div className="w-2 h-2 bg-white rounded-full m-0.5" />
                         )}
@@ -382,7 +391,7 @@ const GamblingAssessment = () => {
         {/* Disclaimer */}
         <div className="mt-8 p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
           <p className="text-slate-400 text-sm text-center">
-            ⚠️ <strong>Disclaimer:</strong> Assessment ini adalah alat skrining awal dan tidak menggantikan diagnosis profesional. 
+            ⚠️ <strong>Disclaimer:</strong> Assessment ini adalah alat skrining awal dan tidak menggantikan diagnosis profesional.
             Jika Anda membutuhkan bantuan segera, hubungi layanan kesehatan mental atau nomor darurat.
           </p>
         </div>

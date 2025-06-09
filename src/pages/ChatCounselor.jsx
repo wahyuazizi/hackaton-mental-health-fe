@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, Send, MessageCircle, User, Bot, Loader2, Heart, Shield, AlertTriangle } from 'lucide-react';
 
 const ChatCounselor = ({ userRiskLevel = null }) => {
@@ -211,10 +212,12 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0">
         <div className="w-full px-6">
           <div className="flex justify-between items-center h-16">
-            <button className="flex items-center space-x-2 text-slate-300 hover:text-white">
-              <ArrowLeft className="w-5 h-5" />
-              <span>Kembali</span>
-            </button>
+            <Link to="/">
+                <button className="flex items-center space-x-2 text-slate-300 hover:text-white cursor-pointer">
+                <ArrowLeft className="w-5 h-5" />
+                <span>Kembali</span>
+                </button>
+            </Link>
             
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
