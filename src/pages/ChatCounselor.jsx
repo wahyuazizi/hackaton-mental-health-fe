@@ -23,7 +23,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
   const messagesEndRef = useRef(null);
 
   // Backend API URL - sesuaikan dengan URL backend Anda
-  const API_BASE_URL = 'https://hackaton-mental-health.yellowwave-80a93936.southeastasia.azurecontainerapps.io';
+  const API_BASE_URL = 'https://hackaton-mental-health.redgrass-f4e4b4bb.southeastasia.azurecontainerapps.io';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

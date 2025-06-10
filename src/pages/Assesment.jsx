@@ -14,7 +14,7 @@ const GamblingAssessment = () => {
   const [results, setResults] = useState(null);
 
   // Base URL untuk API - sesuaikan dengan URL FastAPI Anda
-  const API_BASE_URL = 'https://hackaton-mental-health.yellowwave-80a93936.southeastasia.azurecontainerapps.io'; // Ganti dengan URL FastAPI Anda
+  const API_BASE_URL = 'https://hackaton-mental-health.redgrass-f4e4b4bb.southeastasia.azurecontainerapps.io'; // Ganti dengan URL FastAPI Anda
 
   // Fetch assessment questions dari API
   const fetchAssessmentQuestions = async () => {
