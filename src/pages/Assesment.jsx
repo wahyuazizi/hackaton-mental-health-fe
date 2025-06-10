@@ -14,7 +14,7 @@ const GamblingAssessment = () => {
   const [results, setResults] = useState(null);
 
   // Base URL untuk API - sesuaikan dengan URL FastAPI Anda
-  const API_BASE_URL = 'http://localhost:8000'; // Ganti dengan URL FastAPI Anda
+  const API_BASE_URL = 'https://hackaton-mental-health.yellowwave-80a93936.southeastasia.azurecontainerapps.io'; // Ganti dengan URL FastAPI Anda
 
   // Fetch assessment questions dari API
   const fetchAssessmentQuestions = async () => {
@@ -175,7 +175,8 @@ const GamblingAssessment = () => {
               <div className="flex justify-center mb-4">
                 {riskAssessment.level === 'Rendah' && <CheckCircle className="w-16 h-16 text-emerald-400" />}
                 {riskAssessment.level === 'Sedang' && <Clock className="w-16 h-16 text-yellow-400" />}
-                {(riskAssessment.level === 'Tinggi' || riskAssessment.level === 'Sangat Tinggi') && <AlertTriangle className="w-16 h-16 text-red-400" />}
+                {(riskAssessment.level === 'Tinggi') && <AlertTriangle className="w-16 h-16 text-orange-400" />}
+                {(riskAssessment.level === 'Sangat Tinggi') && <AlertTriangle className="w-16 h-16 text-red-400" />}
               </div>
               <CardTitle className="text-3xl text-white mb-2">Hasil Assessment</CardTitle>
               <CardDescription className="text-slate-400 text-lg">
@@ -252,7 +253,7 @@ const GamblingAssessment = () => {
                     ) : (
                       <>
                         <p>🏥 <strong>RSJ/Rumah Sakit:</strong> 119 (Ambulans)</p>
-                        <p>📞 <strong>Hotline Kesehatan Mental:</strong> 021-500-454</p>
+                        <p>📞 <strong>Hotline Kemkes:</strong> 1500-567</p>
                         <p>💬 <strong>Sejiwa:</strong> 119 ext. 8</p>
                         <p>🌐 <strong>Into The Light:</strong> intothelightid.org</p>
                       </>

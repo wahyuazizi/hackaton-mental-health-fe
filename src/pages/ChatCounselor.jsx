@@ -15,15 +15,15 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCrisisAlert, setShowCrisisAlert] = useState(false);
   const [crisisResources, setCrisisResources] = useState([
-    'Hotline Kesehatan Mental: 119',
-    'HIMPSI (Himpunan Psikologi Indonesia): 0804-1-500-454',
-    'Into The Light: 021-78842580'
+    'Nomor Gawat Darurat: 119',
+    'Hotline Kemkes: 1500-567',
+    'Into The Light: intothelightid.org'
   ]);
   const [conversationHistory, setConversationHistory] = useState([]);
   const messagesEndRef = useRef(null);
 
   // Backend API URL - sesuaikan dengan URL backend Anda
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = 'https://hackaton-mental-health.yellowwave-80a93936.southeastasia.azurecontainerapps.io';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
