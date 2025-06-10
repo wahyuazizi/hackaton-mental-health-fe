@@ -48,7 +48,7 @@ const Home = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-semibold text-white">AIRA</span>
+              <span className="text-xl font-semibold text-white">Mindiri</span>
             </Link>
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
@@ -170,10 +170,10 @@ const Home = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-semibold text-white">AIRA</span>
+              <span className="text-xl font-semibold text-white">Mindiri</span>
             </Link>
             <div className="text-slate-400 text-sm">
-              © 2025 AIRA. Dibuat dengan ❤️ untuk kesehatan mental yang lebih baik.
+              © 2025 Mindiri. With ❤️ for your peace of mind.
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-800/50">
