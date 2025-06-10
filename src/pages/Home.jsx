@@ -21,7 +21,7 @@ const Home = () => {
     {
       icon: Brain,
       title: "Smart Assessment",
-      description: "Penilaian risiko kecanduan judi dan kesehatan mental dengan AI yang akurat",
+      description: "Penilaian risiko kecanduan judi dan kesehatan mental",
       color: "text-purple-400"
     },
     {
