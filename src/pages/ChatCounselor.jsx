@@ -83,7 +83,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       id: messages.length + 1,
       type: 'user',
       content: inputMessage,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     };
 
     // Update messages and conversation history
@@ -111,7 +111,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
         id: messages.length + 2,
         type: 'assistant',
         content: response.response,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
       };
 
       setMessages(prev => [...prev, botMessage]);
@@ -130,7 +130,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
         id: messages.length + 2,
         type: 'assistant',
         content: 'Maaf, saya mengalami gangguan teknis. Silakan coba lagi dalam beberapa saat. Jika Anda dalam keadaan darurat, hubungi 119 atau layanan kesehatan mental terdekat.',
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
