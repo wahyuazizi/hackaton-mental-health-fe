@@ -32,9 +32,9 @@
 
 ## Overview
 
-Hackaton-Mental-Health-Fe is a modern, React-based platform designed to accelerate the development of mental health web applications. It combines a fast, Vite-powered environment with a cohesive UI built on Tailwind CSS, supporting scalable and maintainable frontend architecture.
+Mindiri is a modern, React-based platform designed to accelerate the development of mental health web applications. It combines a fast, Vite-powered environment with a cohesive UI built on Tailwind CSS, supporting scalable and maintainable frontend architecture.
 
-**Why Hackaton-Mental-Health-Fe?**
+**Why Mindiri?**
 
 This project aims to deliver a robust, user-friendly mental health platform with features like assessments, AI-driven chat, and seamless navigation. The core features include:
 
