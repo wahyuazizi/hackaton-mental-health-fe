@@ -8,7 +8,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       id: 1,
       type: 'assistant',
       content: 'Halo! Saya AIRA, AI Counselor Anda. Saya di sini untuk mendengarkan dan membantu Anda dengan pendekatan Cognitive Behavioral Therapy (CBT). Apa yang ingin Anda bicarakan hari ini?',
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
