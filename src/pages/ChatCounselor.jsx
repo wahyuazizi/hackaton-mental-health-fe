@@ -33,6 +33,23 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
     scrollToBottom();
   }, [messages]);
 
+  // Set CSS custom properties for mobile viewport
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   const sendMessageToBackend = async (message, userRiskLevel = null) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/chat`, {
@@ -159,8 +176,17 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       <style>{`
+        :root {
+          --vh: 1vh;
+        }
+        
+        .mobile-height {
+          height: calc(var(--vh, 1vh) * 100);
+          max-height: calc(var(--vh, 1vh) * 100);
+        }
+        
         .scrollbar-thin::-webkit-scrollbar {
           width: 8px;
         }
@@ -206,10 +232,27 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
         textarea.scrollbar-thin:hover::-webkit-scrollbar-thumb {
           background: rgba(71, 85, 105, 0.6);
         }
+        
+        /* Prevent zooming on iOS when focusing inputs */
+        @media screen and (max-width: 768px) {
+          input, textarea, select {
+            font-size: 16px !important;
+          }
+        }
+        
+        /* Safe area for devices with notches */
+        @supports (padding: max(0px)) {
+          .safe-area-top {
+            padding-top: max(1rem, env(safe-area-inset-top));
+          }
+          .safe-area-bottom {
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+          }
+        }
       `}</style>
 
       {/* Header */}
-      <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0">
+      <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0 safe-area-top">
         <div className="w-full px-4 md:px-6">
           <div className="flex justify-between items-center h-14 md:h-16">
             <Link to="/">
@@ -246,18 +289,18 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       {showCrisisAlert && <CrisisAlert />}
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-0">
         <div className="h-full overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-track-slate-900/20 scrollbar-thumb-slate-700/50 hover:scrollbar-thumb-slate-600/70">
           <div className="max-w-4xl mx-auto space-y-6">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[70%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`rounded-2xl p-6 ${message.type === 'user'
+                <div className={`max-w-[85%] md:max-w-[70%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                  <div className={`rounded-2xl p-4 md:p-6 ${message.type === 'user'
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                       : 'bg-slate-800/50 text-slate-100 border border-slate-700/50'
                     }`}>
-                    <p className="leading-relaxed whitespace-pre-wrap text-base">{message.content}</p>
-                    <p className="text-xs mt-3 opacity-70">{message.timestamp}</p>
+                    <p className="leading-relaxed whitespace-pre-wrap text-sm md:text-base">{message.content}</p>
+                    <p className="text-xs mt-2 md:mt-3 opacity-70">{message.timestamp}</p>
                   </div>
                 </div>
               </div>
@@ -265,8 +308,8 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[70%]">
-                  <div className="bg-slate-800/50 text-slate-100 border border-slate-700/50 rounded-2xl p-6">
+                <div className="max-w-[85%] md:max-w-[70%]">
+                  <div className="bg-slate-800/50 text-slate-100 border border-slate-700/50 rounded-2xl p-4 md:p-6">
                     <div className="flex items-center space-x-3">
                       <Loader2 className="w-5 h-5 animate-spin" />
                       <span className="text-slate-300">AIRA sedang mengetik...</span>
@@ -281,9 +324,9 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       </div>
 
       {/* Input Area */}
-      <div className="flex-shrink-0 border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
+      <div className="flex-shrink-0 border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm safe-area-bottom">
+        <div className="max-w-4xl mx-auto px-4 py-3 md:py-4">
+          <div className="flex items-end gap-3 md:gap-4">
             <div className="flex-1">
               <textarea
                 value={inputMessage}
@@ -291,10 +334,10 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
                 onKeyDown={handleKeyPress}
                 rows={1}
                 placeholder="Ketik pesan Anda..."
-                className="w-full resize-none rounded-2xl bg-slate-800/80 text-white p-4 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base min-h-[56px] max-h-32 scrollbar-thin"
+                className="w-full resize-none rounded-2xl bg-slate-800/80 text-white p-3 md:p-4 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm md:text-base min-h-[48px] md:min-h-[56px] max-h-32 scrollbar-thin"
                 style={{
                   height: 'auto',
-                  minHeight: '56px'
+                  minHeight: window.innerWidth < 768 ? '48px' : '56px'
                 }}
                 onInput={(e) => {
                   e.target.style.height = 'auto';
@@ -305,9 +348,9 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputMessage.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 p-4 rounded-2xl h-12 w-12 flex-shrink-0 flex items-center justify-center transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 p-3 md:p-4 rounded-2xl h-10 w-10 md:h-12 md:w-12 flex-shrink-0 flex items-center justify-center transition-colors"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+              {isLoading ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Send className="w-4 h-4 md:w-5 md:h-5" />}
             </button>
           </div>
         </div>
