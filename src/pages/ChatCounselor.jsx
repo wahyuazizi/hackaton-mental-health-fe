@@ -83,7 +83,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
 
     try {
       const response = await sendMessageToBackend(currentMessage, userRiskLevel);
-      
+
       // Handle crisis detection
       if (response.is_crisis) {
         setShowCrisisAlert(true);
@@ -98,7 +98,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
       };
 
       setMessages(prev => [...prev, botMessage]);
-      
+
       // Update conversation history
       setConversationHistory(prev => [...prev, {
         role: 'assistant',
@@ -107,7 +107,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
 
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       // Fallback response
       const errorMessage = {
         id: messages.length + 2,
@@ -147,8 +147,8 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
               </div>
             </div>
           </div>
-          <button 
-            onClick={() => setShowCrisisAlert(false)} 
+          <button
+            onClick={() => setShowCrisisAlert(false)}
             className="text-white hover:text-gray-200 text-xl font-bold"
           >
             ×
@@ -210,32 +210,30 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
 
       {/* Header */}
       <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 flex-shrink-0">
-        <div className="w-full px-6">
-          <div className="flex justify-between items-center h-16">
+        <div className="w-full px-4 md:px-6">
+          <div className="flex justify-between items-center h-14 md:h-16">
             <Link to="/">
-                <button className="flex items-center space-x-2 text-slate-300 hover:text-white cursor-pointer">
-                <ArrowLeft className="w-5 h-5" />
-                <span>Kembali</span>
-                </button>
+              <button className="flex items-center space-x-2 text-slate-300 hover:text-white cursor-pointer">
+                <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="text-sm md:text-base hidden md:inline">Kembali</span>
+              </button>
             </Link>
-            
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
+
+            <div className="flex items-center space-x-2 md:space-x-3 flex-1 justify-center">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Heart className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
               <div className="text-center">
-                <div className="text-white font-semibold">AIRA - AI Counselor</div>
-                <div className="text-slate-400 text-xs">Cognitive Behavioral Therapy (CBT)</div>
+                <div className="text-white font-semibold text-sm md:text-base">AIRA - AI Counselor</div>
+                <div className="text-slate-400 text-xs hidden md:block">Cognitive Behavioral Therapy (CBT)</div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-slate-300 text-sm">Online</span>
+            <div className="flex items-center">
               {/* Demo button to show crisis alert */}
-              <button 
-                onClick={() => setShowCrisisAlert(true)} 
-                className="ml-4 text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-white"
+              <button
+                onClick={() => setShowCrisisAlert(true)}
+                className="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-white"
               >
                 Demo Crisis
               </button>
@@ -254,18 +252,17 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[70%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`rounded-2xl p-6 ${
-                    message.type === 'user' 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' 
+                  <div className={`rounded-2xl p-6 ${message.type === 'user'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                       : 'bg-slate-800/50 text-slate-100 border border-slate-700/50'
-                  }`}>
+                    }`}>
                     <p className="leading-relaxed whitespace-pre-wrap text-base">{message.content}</p>
                     <p className="text-xs mt-3 opacity-70">{message.timestamp}</p>
                   </div>
                 </div>
               </div>
             ))}
-            
+
             {isLoading && (
               <div className="flex justify-start">
                 <div className="max-w-[70%]">
@@ -295,7 +292,7 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
                 rows={1}
                 placeholder="Ketik pesan Anda..."
                 className="w-full resize-none rounded-2xl bg-slate-800/80 text-white p-4 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base min-h-[56px] max-h-32 scrollbar-thin"
-                style={{ 
+                style={{
                   height: 'auto',
                   minHeight: '56px'
                 }}
@@ -305,9 +302,9 @@ const ChatCounselor = ({ userRiskLevel = null }) => {
                 }}
               />
             </div>
-            <button 
-              onClick={handleSendMessage} 
-              disabled={isLoading || !inputMessage.trim()} 
+            <button
+              onClick={handleSendMessage}
+              disabled={isLoading || !inputMessage.trim()}
               className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 p-4 rounded-2xl h-12 w-12 flex-shrink-0 flex items-center justify-center transition-colors"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
